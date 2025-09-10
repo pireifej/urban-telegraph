@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Heart, MessageCircle, Share } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { Article } from "@shared/schema";
 
 export default function ArticleDetail() {
   const { id } = useParams();
 
-  const { data: article, isLoading, error } = useQuery({
+  const { data: article, isLoading, error } = useQuery<Article>({
     queryKey: ["/api/articles", id],
     enabled: !!id,
   });
@@ -96,7 +97,7 @@ export default function ArticleDetail() {
                 }`}
                 data-testid="text-category"
               >
-                {article.category.split('-').map(word => 
+                {article.category.split('-').map((word: string) => 
                   word.charAt(0).toUpperCase() + word.slice(1)
                 ).join(' ')}
               </span>

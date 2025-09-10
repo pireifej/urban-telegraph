@@ -4,6 +4,14 @@ import { Article, InsertArticle, UpdateArticle } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
+interface ExternalArticle {
+  id: number;
+  preview: string;
+  title: string;
+  image: string | null;
+  timestamp: string;
+}
+
 interface ArticleContextType {
   // Public articles
   articles: Article[];
@@ -14,7 +22,7 @@ interface ArticleContextType {
   isLoadingAdminArticles: boolean;
   
   // External articles
-  externalArticles: any[];
+  externalArticles: ExternalArticle[];
   isLoadingExternalArticles: boolean;
   refetchExternalArticles: () => void;
   
@@ -36,18 +44,18 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   // Fetch published articles for public view
-  const { data: articles = [], isLoading: isLoadingArticles } = useQuery({
+  const { data: articles = [], isLoading: isLoadingArticles } = useQuery<Article[]>({
     queryKey: ["/api/articles/published"],
   });
 
   // Fetch all articles for admin view
-  const { data: adminArticles = [], isLoading: isLoadingAdminArticles } = useQuery({
+  const { data: adminArticles = [], isLoading: isLoadingAdminArticles } = useQuery<Article[]>({
     queryKey: ["/api/articles"],
   });
 
   // Fetch external articles
   const { 
-    data: externalArticles = [], 
+    data: externalData, 
     isLoading: isLoadingExternalArticles,
     refetch: refetchExternalArticles 
   } = useQuery({
@@ -55,9 +63,12 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
     queryFn: async () => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
       const response = await apiRequest("POST", "/api/external/articles", { tz: timezone });
-      return response.json();
+      const data = await response.json();
+      return data;
     },
   });
+
+  const externalArticles: ExternalArticle[] = externalData?.result || [];
 
   // Create article mutation
   const createMutation = useMutation({

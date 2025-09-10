@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useArticles } from "@/contexts/ArticleContext";
 import Navigation from "@/components/Navigation";
 import ArticleCard from "@/components/ArticleCard";
+import ExternalArticleCard from "@/components/ExternalArticleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "wouter";
 
 export default function Home() {
   const { articles, isLoadingArticles, externalArticles, isLoadingExternalArticles } = useArticles();
@@ -81,22 +83,10 @@ export default function Home() {
             <div className="mt-16">
               <h3 className="text-2xl font-bold text-foreground mb-8 text-center">Featured External Content</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {externalArticles.slice(0, 3).map((article, index) => (
-                  <div key={index} className="bg-card rounded-lg shadow-lg overflow-hidden border border-border">
-                    <div className="p-6">
-                      <div className="flex items-center mb-3">
-                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                          External
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-semibold text-foreground mb-3">
-                        {article.title || `External Article ${index + 1}`}
-                      </h3>
-                      <p className="text-muted-foreground mb-4 line-clamp-3">
-                        {article.description || article.excerpt || "External content from our partners."}
-                      </p>
-                    </div>
-                  </div>
+                {externalArticles.slice(0, 6).map((article) => (
+                  <Link key={article.id} href={`/external/${article.id}`}>
+                    <ExternalArticleCard article={article} />
+                  </Link>
                 ))}
               </div>
             </div>

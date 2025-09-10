@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ArticleProvider } from "@/contexts/ArticleContext";
 import Home from "@/pages/Home";
 import ArticleDetail from "@/pages/ArticleDetail";
+import ExternalArticleDetail from "@/pages/ExternalArticleDetail";
 import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 
@@ -14,6 +15,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/article/:id" component={ArticleDetail} />
+      <Route path="/external/:id" component={ExternalArticleDetail} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>

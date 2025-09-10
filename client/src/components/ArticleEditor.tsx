@@ -176,7 +176,7 @@ export default function ArticleEditor({ isOpen, onClose, article }: ArticleEdito
             <Label>Featured Image</Label>
             <ImageUpload 
               onImageUpload={handleImageUpload}
-              currentImage={formData.featuredImage}
+              currentImage={formData.featuredImage || undefined}
             />
           </div>
 
@@ -187,7 +187,7 @@ export default function ArticleEditor({ isOpen, onClose, article }: ArticleEdito
               id="excerpt"
               rows={3}
               placeholder="Brief description of the article..."
-              value={formData.excerpt}
+              value={formData.excerpt || ""}
               onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
               data-testid="textarea-excerpt"
             />

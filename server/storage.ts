@@ -57,6 +57,11 @@ export class MemStorage implements IStorage {
     const article: Article = {
       ...insertArticle,
       id,
+      status: insertArticle.status || "draft",
+      excerpt: insertArticle.excerpt || null,
+      featuredImage: insertArticle.featuredImage || null,
+      readTime: insertArticle.readTime || null,
+      author: insertArticle.author || null,
       createdAt: now,
       updatedAt: now,
       publishedAt: insertArticle.status === "published" ? now : null,
