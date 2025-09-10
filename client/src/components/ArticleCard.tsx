@@ -29,7 +29,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     <article className="article-card bg-card rounded-lg shadow-lg overflow-hidden border border-border" data-testid={`card-article-${article.id}`}>
       {((article as any).image || article.featuredImage) && (
         <img 
-          src={(article as any).image ? `https://www.prayoverus.com:3000/${(article as any).image}` : article.featuredImage}
+          src={(article as any).image ? `https://www.prayoverus.com:3000/${(article as any).image}` : (article.featuredImage || '')}
           alt={article.title}
           className="w-full h-48 object-cover"
           data-testid="img-featured"
@@ -38,10 +38,10 @@ export default function ArticleCard({ article }: ArticleCardProps) {
       <div className="p-6">
         <div className="flex items-center mb-3">
           <Badge 
-            className={categoryColors[article.category] || "bg-accent text-accent-foreground"}
+            className={categoryColors[article.category || "general"] || "bg-accent text-accent-foreground"}
             data-testid="text-category"
           >
-            {article.category ? 
+            {article.category && typeof article.category === 'string' ? 
               article.category.split('-').map(word => 
                 word.charAt(0).toUpperCase() + word.slice(1)
               ).join(' ') 
