@@ -34,7 +34,7 @@ export default function Home() {
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">Urban-Telegraph</h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
-              Discover stories, insights, and reviews from the pulse of urban life
+              Positively, what's happening
             </p>
           </div>
         </div>
