@@ -33,6 +33,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Individual external article endpoint
+  app.post("/api/external/article", async (req, res) => {
+    try {
+      const { tz = "US/Eastern", id } = req.body;
+      
+      if (!id) {
+        return res.status(400).json({ error: "Article ID is required" });
+      }
+
+      const response = await fetch("https://www.prayoverus.com:3000/getBlogArticle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tz, id }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`External API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching external article:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch external article",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Get all articles (admin)
   app.get("/api/articles", async (req, res) => {
     try {
