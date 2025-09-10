@@ -30,15 +30,42 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Fetch published articles for public view
-  const { data: articles = [], isLoading: isLoadingArticles } = useQuery<Article[]>({
-    queryKey: ["/api/articles/published"],
+  // Fetch articles from external API for public view
+  const { data: articlesData, isLoading: isLoadingArticles } = useQuery({
+    queryKey: ["/api/external/articles"],
+    queryFn: async () => {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
+      const response = await fetch("/api/external/articles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tz: timezone }),
+      });
+      const data = await response.json();
+      return data;
+    },
   });
 
-  // Fetch all articles for admin view
-  const { data: adminArticles = [], isLoading: isLoadingAdminArticles } = useQuery<Article[]>({
-    queryKey: ["/api/articles"],
+  // Fetch articles from external API for admin view (same data)
+  const { data: adminArticlesData, isLoading: isLoadingAdminArticles } = useQuery({
+    queryKey: ["/api/external/articles-admin"],
+    queryFn: async () => {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
+      const response = await fetch("/api/external/articles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tz: timezone }),
+      });
+      const data = await response.json();
+      return data;
+    },
   });
+
+  const articles = articlesData?.result || [];
+  const adminArticles = adminArticlesData?.result || [];
 
 
   // Create article mutation
@@ -47,8 +74,8 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
       await apiRequest("POST", "/api/articles", article);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/articles"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/articles/published"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/external/articles"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/external/articles-admin"] });
       toast({
         title: "Success",
         description: "Article created successfully",
@@ -69,8 +96,8 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
       await apiRequest("PUT", `/api/articles/${id}`, article);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/articles"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/articles/published"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/external/articles"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/external/articles-admin"] });
       toast({
         title: "Success",
         description: "Article updated successfully",
@@ -91,8 +118,8 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
       await apiRequest("DELETE", `/api/articles/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/articles"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/articles/published"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/external/articles"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/external/articles-admin"] });
       toast({
         title: "Success",
         description: "Article deleted successfully",
