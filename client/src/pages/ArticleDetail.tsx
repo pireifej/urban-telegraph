@@ -174,7 +174,11 @@ export default function ArticleDetail() {
         {/* Article Content */}
         <div 
           className="prose prose-lg max-w-none mb-12"
-          dangerouslySetInnerHTML={{ __html: article.content || article.preview || "No content available" }}
+          dangerouslySetInnerHTML={{ 
+            __html: (article.content || article.preview || "No content available")
+              .replace(/<img[^>]*src="img\/[^"]*"[^>]*>/g, '') // Remove broken relative image tags
+              .replace(/<p[^>]*>\s*<\/p>/g, '') // Remove empty paragraphs
+          }}
           data-testid="content-article"
         />
 
