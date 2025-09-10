@@ -11,10 +11,25 @@ import { Article } from "@shared/schema";
 export default function ArticleDetail() {
   const { id } = useParams();
 
-  const { data: article, isLoading, error } = useQuery<Article>({
-    queryKey: ["/api/articles", id],
+  const { data: articleData, isLoading, error } = useQuery({
+    queryKey: ["/api/external/article", id],
+    queryFn: async () => {
+      if (!id) return null;
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
+      const response = await fetch("/api/external/article", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tz: timezone, id: parseInt(id) }),
+      });
+      const data = await response.json();
+      return data;
+    },
     enabled: !!id,
   });
+
+  const article = articleData?.result;
 
   if (isLoading) {
     return (
@@ -58,9 +73,9 @@ export default function ArticleDetail() {
   }
 
   const readTime = article.readTime || "5 min read";
-  const publishedDate = article.publishedAt 
-    ? formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })
-    : formatDistanceToNow(new Date(article.createdAt || Date.now()), { addSuffix: true });
+  const publishedDate = article.timestamp 
+    ? formatDistanceToNow(new Date(article.timestamp), { addSuffix: true })
+    : "Recently published";
 
   const categoryColors: Record<string, string> = {
     "urban-life": "bg-accent text-accent-foreground",
@@ -116,9 +131,9 @@ export default function ArticleDetail() {
         </div>
 
         {/* Featured Image */}
-        {article.featuredImage && (
+        {article.image && (
           <img 
-            src={article.featuredImage}
+            src={`https://www.prayoverus.com:3000/${article.image}`}
             alt={article.title}
             className="w-full h-96 object-cover rounded-lg mb-8"
             data-testid="img-featured"
@@ -126,16 +141,16 @@ export default function ArticleDetail() {
         )}
 
         {/* Article Excerpt */}
-        {article.excerpt && (
+        {article.preview && (
           <div className="text-lg text-muted-foreground leading-relaxed mb-8 p-6 bg-muted/30 rounded-lg" data-testid="text-excerpt">
-            {article.excerpt}
+            {article.preview}
           </div>
         )}
 
         {/* Article Content */}
         <div 
           className="prose prose-lg max-w-none mb-12"
-          dangerouslySetInnerHTML={{ __html: article.content }}
+          dangerouslySetInnerHTML={{ __html: article.content || article.preview || "No content available" }}
           data-testid="content-article"
         />
 
