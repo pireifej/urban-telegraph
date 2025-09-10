@@ -8,6 +8,13 @@ import { ArrowLeft, Heart, MessageCircle, Share } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Article } from "@shared/schema";
 
+// Import fallback images
+import theaterImage from "@assets/generated_images/Theater_stage_scene_1e95b612.png";
+import journalismImage from "@assets/generated_images/Journalism_writing_desk_96f4f60c.png";
+import cityImage from "@assets/generated_images/Urban_cityscape_evening_6981b5d6.png";
+import conversationImage from "@assets/generated_images/Interview_conversation_scene_909fc0e2.png";
+import abstractImage from "@assets/generated_images/Creative_arts_abstract_00e94da6.png";
+
 export default function ArticleDetail() {
   const { id } = useParams();
 
@@ -77,6 +84,22 @@ export default function ArticleDetail() {
     ? formatDistanceToNow(new Date(article.timestamp), { addSuffix: true })
     : "Recently published";
 
+  // Function to get fallback image based on article content
+  const getFallbackImage = () => {
+    const title = article.title.toLowerCase();
+    if (title.includes('theatre') || title.includes('theater') || title.includes('shakespeare') || title.includes('stage') || title.includes('roars')) {
+      return theaterImage;
+    } else if (title.includes('conversation') || title.includes('interview') || title.includes('lea')) {
+      return conversationImage;
+    } else if (title.includes('urban') || title.includes('world') || title.includes('city')) {
+      return cityImage;
+    } else if (title.includes('tips') || title.includes('telegraph') || title.includes('welcome')) {
+      return journalismImage;
+    } else {
+      return abstractImage;
+    }
+  };
+
   const categoryColors: Record<string, string> = {
     "urban-life": "bg-accent text-accent-foreground",
     "food-review": "bg-orange-100 text-orange-800",
@@ -131,30 +154,14 @@ export default function ArticleDetail() {
         </div>
 
         {/* Featured Image */}
-        <div className="relative w-full h-96 bg-gradient-to-br from-accent/20 to-accent/40 rounded-lg overflow-hidden mb-8">
-          {article.image ? (
-            <img 
-              src={`https://www.prayoverus.com:3000/${article.image}`}
-              alt={article.title}
-              className="w-full h-96 object-cover rounded-lg"
-              data-testid="img-featured"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                if (fallback) fallback.style.display = 'flex';
-              }}
-            />
-          ) : null}
-          <div 
-            className="absolute inset-0 bg-gradient-to-br from-accent/30 to-accent/60 flex items-center justify-center rounded-lg"
-            style={{ display: article.image ? 'none' : 'flex' }}
-          >
-            <div className="text-center text-white p-8">
-              <div className="text-6xl font-bold mb-4">UT</div>
-              <div className="text-xl opacity-90">Urban Telegraph</div>
-              <div className="text-sm opacity-75 mt-2">Featured Article</div>
-            </div>
-          </div>
+        <div className="relative w-full h-96 rounded-lg overflow-hidden mb-8">
+          <img 
+            src={getFallbackImage()}
+            alt={article.title}
+            className="w-full h-96 object-cover rounded-lg"
+            data-testid="img-featured"
+          />
+          <div className="absolute inset-0 bg-black/30 rounded-lg"></div>
         </div>
 
         {/* Article Excerpt */}
