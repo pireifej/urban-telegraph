@@ -1,0 +1,178 @@
+import { useParams } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
+import Navigation from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowLeft, Heart, MessageCircle, Share } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+
+export default function ArticleDetail() {
+  const { id } = useParams();
+
+  const { data: article, isLoading, error } = useQuery({
+    queryKey: ["/api/articles", id],
+    enabled: !!id,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Skeleton className="h-8 w-32 mb-4" />
+          <Skeleton className="h-12 w-full mb-4" />
+          <Skeleton className="h-4 w-64 mb-8" />
+          <Skeleton className="h-96 w-full mb-8" />
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !article) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-foreground mb-4">Article Not Found</h1>
+            <p className="text-muted-foreground mb-8">
+              The article you're looking for doesn't exist or has been removed.
+            </p>
+            <Link href="/">
+              <Button>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const readTime = article.readTime || "5 min read";
+  const publishedDate = article.publishedAt 
+    ? formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })
+    : formatDistanceToNow(new Date(article.createdAt || Date.now()), { addSuffix: true });
+
+  const categoryColors: Record<string, string> = {
+    "urban-life": "bg-accent text-accent-foreground",
+    "food-review": "bg-orange-100 text-orange-800",
+    "technology": "bg-blue-100 text-blue-800",
+    "environment": "bg-green-100 text-green-800",
+    "culture": "bg-purple-100 text-purple-800",
+    "business": "bg-gray-100 text-gray-800",
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Article Header */}
+        <div className="mb-8">
+          <div className="flex items-center mb-4">
+            <Link href="/">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-accent hover:text-accent/80 mr-4"
+                data-testid="button-back"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Articles
+              </Button>
+            </Link>
+            {article.category && (
+              <span 
+                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  categoryColors[article.category] || "bg-accent text-accent-foreground"
+                }`}
+                data-testid="text-category"
+              >
+                {article.category.split('-').map(word => 
+                  word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ')}
+              </span>
+            )}
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4" data-testid="text-title">
+            {article.title}
+          </h1>
+          <div className="flex items-center text-muted-foreground text-sm">
+            <span data-testid="text-published-date">{publishedDate}</span>
+            <span className="mx-2">•</span>
+            <span data-testid="text-read-time">{readTime}</span>
+            <span className="mx-2">•</span>
+            <span data-testid="text-author">By {article.author || "Urban-Telegraph Team"}</span>
+          </div>
+        </div>
+
+        {/* Featured Image */}
+        {article.featuredImage && (
+          <img 
+            src={article.featuredImage}
+            alt={article.title}
+            className="w-full h-96 object-cover rounded-lg mb-8"
+            data-testid="img-featured"
+          />
+        )}
+
+        {/* Article Excerpt */}
+        {article.excerpt && (
+          <div className="text-lg text-muted-foreground leading-relaxed mb-8 p-6 bg-muted/30 rounded-lg" data-testid="text-excerpt">
+            {article.excerpt}
+          </div>
+        )}
+
+        {/* Article Content */}
+        <div 
+          className="prose prose-lg max-w-none mb-12"
+          dangerouslySetInnerHTML={{ __html: article.content }}
+          data-testid="content-article"
+        />
+
+        {/* Article Actions */}
+        <div className="border-t border-border pt-8 mt-12">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-muted-foreground hover:text-accent"
+                data-testid="button-like"
+              >
+                <Heart className="mr-2 h-4 w-4" />
+                Like
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-muted-foreground hover:text-accent"
+                data-testid="button-comment"
+              >
+                <MessageCircle className="mr-2 h-4 w-4" />
+                Comment
+              </Button>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-accent"
+              data-testid="button-share"
+            >
+              <Share className="mr-2 h-4 w-4" />
+              Share
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
