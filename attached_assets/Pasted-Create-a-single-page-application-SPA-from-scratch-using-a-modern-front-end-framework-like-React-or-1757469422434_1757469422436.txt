@@ -1,0 +1,25 @@
+Create a single-page application (SPA) from scratch using a modern front-end framework like React or Vue.js. This application will serve as the user interface for a personal blog/review site.
+
+The application has two main components:
+
+1.  **Public-Facing Website:**
+    * Design and build a clean, beautiful, and modern UI to display articles.
+    * The layout must be fully responsive, providing a seamless experience on both desktop and mobile devices.
+    * Implement routing to display a list of all articles on the home page and navigate to a dedicated page for each individual article.
+    * The design should be visually appealing and align with a professional, minimalist aesthetic.
+
+2.  **Admin Panel:**
+    * Create a user interface for an admin dashboard that includes forms and controls for article management.
+    * This section will communicate with the backend via a RESTful API. There is no need to implement authentication logic in the front end, as the backend will handle that.
+    * Develop UI components for:
+        * **Adding New Articles:** A form with fields for a title and a rich text editor for the article body. The form should also include a file input for image uploads.
+        * **Editing Articles:** A page that pre-populates a form with data from an existing article for modification.
+        * **Deleting Articles:** A button or link next to each article in a list view to trigger a delete request.
+        * **Loading Articles:** The UI should make an initial API call to fetch and display all existing articles.
+
+**Key Technical Requirements:**
+* Use a modern front-end framework (React or Vue.js).
+* Utilize a state management solution (e.g., React Context, Redux, Vuex) for managing application data.
+* Implement API calls using `fetch` or a library like `axios` to interact with the provided backend endpoints.
+* Create a responsive design without relying on a full-blown CSS framework.
+* The application should be structured for maintainability and scalability.
