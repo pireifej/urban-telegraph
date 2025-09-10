@@ -19,11 +19,11 @@ export default function ArticleDetail() {
   const { id } = useParams();
 
   const { data: articleData, isLoading, error } = useQuery({
-    queryKey: ["/api/external/article", id],
+    queryKey: ["external/article", id],
     queryFn: async () => {
       if (!id) return null;
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await fetch("/api/external/article", {
+      const response = await fetch("https://www.prayoverus.com:3000/getBlogArticle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
