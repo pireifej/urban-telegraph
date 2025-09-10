@@ -21,9 +21,9 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
-  const filteredArticles = adminArticles.filter((article) => {
+  const filteredArticles = adminArticles.filter((article: any) => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (article.excerpt || "").toLowerCase().includes(searchTerm.toLowerCase());
+                         (article.preview || article.excerpt || "").toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === "all" || article.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
@@ -55,7 +55,11 @@ export default function Admin() {
     }
   };
 
-  const getCategoryBadge = (category: string) => {
+  const getCategoryBadge = (category: string | undefined) => {
+    if (!category) {
+      return <Badge className="bg-accent text-accent-foreground">General</Badge>;
+    }
+
     const categoryColors: Record<string, string> = {
       "urban-life": "bg-accent text-accent-foreground",
       "food-review": "bg-orange-100 text-orange-800",
@@ -216,7 +220,7 @@ export default function Admin() {
                                   {article.title}
                                 </div>
                                 <div className="text-sm text-muted-foreground truncate max-w-xs" data-testid="text-article-excerpt">
-                                  {article.excerpt || "No excerpt available"}
+                                  {article.preview || article.excerpt || "No excerpt available"}
                                 </div>
                               </div>
                             </td>
@@ -227,7 +231,10 @@ export default function Admin() {
                               {getStatusBadge(article.status)}
                             </td>
                             <td className="py-4 px-6 text-muted-foreground text-sm" data-testid="text-article-date">
-                              {formatDistanceToNow(new Date(article.createdAt || Date.now()), { addSuffix: true })}
+                              {article.timestamp ? 
+                                formatDistanceToNow(new Date(article.timestamp), { addSuffix: true }) :
+                                formatDistanceToNow(new Date(article.createdAt || Date.now()), { addSuffix: true })
+                              }
                             </td>
                             <td className="py-4 px-6">
                               <div className="flex items-center space-x-2">
