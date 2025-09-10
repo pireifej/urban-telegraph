@@ -131,14 +131,31 @@ export default function ArticleDetail() {
         </div>
 
         {/* Featured Image */}
-        {article.image && (
-          <img 
-            src={`https://www.prayoverus.com:3000/${article.image}`}
-            alt={article.title}
-            className="w-full h-96 object-cover rounded-lg mb-8"
-            data-testid="img-featured"
-          />
-        )}
+        <div className="relative w-full h-96 bg-gradient-to-br from-accent/20 to-accent/40 rounded-lg overflow-hidden mb-8">
+          {article.image ? (
+            <img 
+              src={`https://www.prayoverus.com:3000/${article.image}`}
+              alt={article.title}
+              className="w-full h-96 object-cover rounded-lg"
+              data-testid="img-featured"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                if (fallback) fallback.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          <div 
+            className="absolute inset-0 bg-gradient-to-br from-accent/30 to-accent/60 flex items-center justify-center rounded-lg"
+            style={{ display: article.image ? 'none' : 'flex' }}
+          >
+            <div className="text-center text-white p-8">
+              <div className="text-6xl font-bold mb-4">UT</div>
+              <div className="text-xl opacity-90">Urban Telegraph</div>
+              <div className="text-sm opacity-75 mt-2">Featured Article</div>
+            </div>
+          </div>
+        </div>
 
         {/* Article Excerpt */}
         {article.preview && (

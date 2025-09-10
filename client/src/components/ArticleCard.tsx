@@ -27,14 +27,30 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <article className="article-card bg-card rounded-lg shadow-lg overflow-hidden border border-border" data-testid={`card-article-${article.id}`}>
-      {((article as any).image || article.featuredImage) && (
-        <img 
-          src={(article as any).image ? `https://www.prayoverus.com:3000/${(article as any).image}` : (article.featuredImage || '')}
-          alt={article.title}
-          className="w-full h-48 object-cover"
-          data-testid="img-featured"
-        />
-      )}
+      <div className="relative w-full h-48 bg-gradient-to-br from-accent/20 to-accent/40 overflow-hidden">
+        {((article as any).image || article.featuredImage) ? (
+          <img 
+            src={(article as any).image ? `https://www.prayoverus.com:3000/${(article as any).image}` : (article.featuredImage || '')}
+            alt={article.title}
+            className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+            data-testid="img-featured"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+              if (fallback) fallback.style.display = 'flex';
+            }}
+          />
+        ) : null}
+        <div 
+          className="absolute inset-0 bg-gradient-to-br from-accent/30 to-accent/60 flex items-center justify-center"
+          style={{ display: (article as any).image || article.featuredImage ? 'none' : 'flex' }}
+        >
+          <div className="text-center text-white p-4">
+            <div className="text-3xl font-bold mb-2">UT</div>
+            <div className="text-sm opacity-90">Urban Telegraph</div>
+          </div>
+        </div>
+      </div>
       <div className="p-6">
         <div className="flex items-center mb-3">
           <Badge 
