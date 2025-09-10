@@ -2,14 +2,12 @@ import { useState } from "react";
 import { useArticles } from "@/contexts/ArticleContext";
 import Navigation from "@/components/Navigation";
 import ArticleCard from "@/components/ArticleCard";
-import ExternalArticleCard from "@/components/ExternalArticleCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "wouter";
 
 export default function Home() {
-  const { articles, isLoadingArticles, externalArticles, isLoadingExternalArticles } = useArticles();
+  const { articles, isLoadingArticles } = useArticles();
   const [email, setEmail] = useState("");
 
   const handleSubscribe = (e: React.FormEvent) => {
@@ -84,19 +82,6 @@ export default function Home() {
             )}
           </div>
 
-          {/* External Articles Section */}
-          {!isLoadingExternalArticles && externalArticles.length > 0 && (
-            <div className="mt-16">
-              <h3 className="text-2xl font-bold text-foreground mb-8 text-center">Featured External Content</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {externalArticles.slice(0, 6).map((article) => (
-                  <Link key={article.id} href={`/external/${article.id}`}>
-                    <ExternalArticleCard article={article} />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Load More Button */}
           {articles.length > 0 && (

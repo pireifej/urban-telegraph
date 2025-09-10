@@ -4,14 +4,6 @@ import { Article, InsertArticle, UpdateArticle } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-interface ExternalArticle {
-  id: number;
-  preview: string;
-  title: string;
-  image: string | null;
-  timestamp: string;
-}
-
 interface ArticleContextType {
   // Public articles
   articles: Article[];
@@ -20,11 +12,6 @@ interface ArticleContextType {
   // Admin articles
   adminArticles: Article[];
   isLoadingAdminArticles: boolean;
-  
-  // External articles
-  externalArticles: ExternalArticle[];
-  isLoadingExternalArticles: boolean;
-  refetchExternalArticles: () => void;
   
   // Mutations
   createArticle: (article: InsertArticle) => Promise<void>;
@@ -53,22 +40,6 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
     queryKey: ["/api/articles"],
   });
 
-  // Fetch external articles
-  const { 
-    data: externalData, 
-    isLoading: isLoadingExternalArticles,
-    refetch: refetchExternalArticles 
-  } = useQuery({
-    queryKey: ["/api/external/articles"],
-    queryFn: async () => {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await apiRequest("POST", "/api/external/articles", { tz: timezone });
-      const data = await response.json();
-      return data;
-    },
-  });
-
-  const externalArticles: ExternalArticle[] = externalData?.result || [];
 
   // Create article mutation
   const createMutation = useMutation({
@@ -141,9 +112,6 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
     isLoadingArticles,
     adminArticles,
     isLoadingAdminArticles,
-    externalArticles,
-    isLoadingExternalArticles,
-    refetchExternalArticles,
     createArticle: createMutation.mutateAsync,
     updateArticle: (id, article) => updateMutation.mutateAsync({ id, article }),
     deleteArticle: deleteMutation.mutateAsync,
