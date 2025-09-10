@@ -10,7 +10,9 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ article }: ArticleCardProps) {
   const readTime = article.readTime || "5 min read";
-  const publishedDate = article.publishedAt 
+  const publishedDate = (article as any).timestamp 
+    ? formatDistanceToNow(new Date((article as any).timestamp), { addSuffix: true })
+    : article.publishedAt 
     ? formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })
     : formatDistanceToNow(new Date(article.createdAt || Date.now()), { addSuffix: true });
 
@@ -25,9 +27,9 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <article className="article-card bg-card rounded-lg shadow-lg overflow-hidden border border-border" data-testid={`card-article-${article.id}`}>
-      {article.featuredImage && (
+      {((article as any).image || article.featuredImage) && (
         <img 
-          src={article.featuredImage}
+          src={(article as any).image ? `https://www.prayoverus.com:3000/${(article as any).image}` : article.featuredImage}
           alt={article.title}
           className="w-full h-48 object-cover"
           data-testid="img-featured"
@@ -39,9 +41,12 @@ export default function ArticleCard({ article }: ArticleCardProps) {
             className={categoryColors[article.category] || "bg-accent text-accent-foreground"}
             data-testid="text-category"
           >
-            {article.category.split('-').map(word => 
-              word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' ')}
+            {article.category ? 
+              article.category.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+              ).join(' ') 
+              : 'General'
+            }
           </Badge>
           <span className="text-muted-foreground text-sm ml-3" data-testid="text-published-date">
             {publishedDate}
@@ -52,9 +57,9 @@ export default function ArticleCard({ article }: ArticleCardProps) {
             {article.title}
           </Link>
         </h3>
-        {article.excerpt && (
+        {((article as any).preview || article.excerpt) && (
           <p className="text-muted-foreground mb-4 line-clamp-3" data-testid="text-excerpt">
-            {article.excerpt}
+            {(article as any).preview || article.excerpt}
           </p>
         )}
         <div className="flex items-center justify-between">
