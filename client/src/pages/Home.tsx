@@ -24,11 +24,17 @@ export default function Home() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-accent text-primary-foreground">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <section 
+        className="relative bg-cover bg-center bg-no-repeat text-white"
+        style={{
+          backgroundImage: "url('https://urban-telegraph.com/wp-content/themes/twentyeleven/images/headers/wheel.jpg')"
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">Urban-Telegraph</h1>
-            <p className="text-xl md:text-2xl text-primary-foreground/80 max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow-lg">Urban-Telegraph</h1>
+            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto drop-shadow-md">
               Discover stories, insights, and reviews from the pulse of urban life
             </p>
           </div>
