@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 
+// Import banner image
+import urbanBanner from "@assets/generated_images/Urban_cityscape_evening_6981b5d6.png";
+
 export default function Home() {
   const { articles, isLoadingArticles } = useArticles();
   const [email, setEmail] = useState("");
@@ -26,7 +29,7 @@ export default function Home() {
       <section 
         className="relative bg-cover bg-center bg-no-repeat text-white"
         style={{
-          backgroundImage: "url('https://urban-telegraph.com/wp-content/themes/twentyeleven/images/headers/wheel.jpg')"
+          backgroundImage: `url(${urbanBanner})`
         }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
