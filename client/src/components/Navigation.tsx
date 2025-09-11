@@ -32,7 +32,7 @@ export default function Navigation() {
                     <i className="fas fa-home mr-2"></i>Home
                   </Button>
                 </Link>
-                <Link href="/admin">
+                <Link href="/admin" style={{ display: 'none' }}>
                   <Button 
                     variant={isAdmin ? "default" : "ghost"}
                     size="sm"
@@ -73,7 +73,7 @@ export default function Navigation() {
                 <i className="fas fa-home mr-2"></i>Home
               </Button>
             </Link>
-            <Link href="/admin">
+            <Link href="/admin" style={{ display: 'none' }}>
               <Button 
                 variant={isAdmin ? "default" : "ghost"}
                 className="w-full justify-start"
