@@ -27,6 +27,7 @@ export default function ArticleDetail() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Basic ${btoa("admin:password123")}`,
         },
         body: JSON.stringify({ tz: timezone, id: parseInt(id) }),
       });

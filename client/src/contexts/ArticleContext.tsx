@@ -39,6 +39,7 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Basic ${btoa("admin:password123")}`,
         },
         body: JSON.stringify({ tz: timezone }),
       });
@@ -56,6 +57,7 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Basic ${btoa("admin:password123")}`,
         },
         body: JSON.stringify({ tz: timezone }),
       });
