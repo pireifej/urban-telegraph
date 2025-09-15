@@ -35,7 +35,7 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
     queryKey: ["external/articles"],
     queryFn: async () => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await fetch("https://www.prayoverus.com:3000/getAllBlogArticles", {
+      const response = await fetch("https://prayer-api.replit.app/getAllBlogArticles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
     queryKey: ["external/articles-admin"],
     queryFn: async () => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await fetch("https://www.prayoverus.com:3000/getAllBlogArticles", {
+      const response = await fetch("https://prayer-api.replit.app/getAllBlogArticles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

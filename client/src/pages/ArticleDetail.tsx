@@ -23,7 +23,7 @@ export default function ArticleDetail() {
     queryFn: async () => {
       if (!id) return null;
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await fetch("https://www.prayoverus.com:3000/getBlogArticle", {
+      const response = await fetch("https://prayer-api.replit.app/getBlogArticle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
