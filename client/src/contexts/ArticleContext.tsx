@@ -30,7 +30,7 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Fetch articles from external API for public view
+  // Fetch articles from external API (shared for both public and admin views)
   const { data: articlesData, isLoading: isLoadingArticles } = useQuery({
     queryKey: ["external/articles"],
     queryFn: async () => {
@@ -43,31 +43,21 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
         },
         body: JSON.stringify({ tz: timezone }),
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
+      // API returns direct array, not wrapped in result
       return data;
     },
   });
 
-  // Fetch articles from external API for admin view (same data)
-  const { data: adminArticlesData, isLoading: isLoadingAdminArticles } = useQuery({
-    queryKey: ["external/articles-admin"],
-    queryFn: async () => {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await fetch("https://shouldcallpaul.replit.app/getAllBlogArticles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Basic ${btoa(`${import.meta.env.VITE_AUTH_USERNAME}:${import.meta.env.VITE_AUTH_PASSWORD}`)}`,
-        },
-        body: JSON.stringify({ tz: timezone }),
-      });
-      const data = await response.json();
-      return data;
-    },
-  });
-
-  const articles = articlesData?.result || [];
-  const adminArticles = adminArticlesData?.result || [];
+  // Use same data for both public and admin views
+  const articles = articlesData || [];
+  const adminArticles = articlesData || [];
+  const isLoadingAdminArticles = isLoadingArticles;
 
 
   // Create article mutation
