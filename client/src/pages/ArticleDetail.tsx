@@ -23,11 +23,10 @@ export default function ArticleDetail() {
     queryFn: async () => {
       if (!id) return null;
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await fetch("https://shouldcallpaul.replit.app/getBlogArticle", {
+      const response = await fetch("/api/external/article", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Basic ${btoa(`${import.meta.env.VITE_AUTH_USERNAME}:${import.meta.env.VITE_AUTH_PASSWORD}`)}`,
         },
         body: JSON.stringify({ tz: timezone, id: parseInt(id) }),
       });

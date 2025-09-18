@@ -5,15 +5,17 @@ import { insertArticleSchema, updateArticleSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+
   // External API integration - fetch all blog articles
   app.post("/api/external/articles", async (req, res) => {
     try {
       const { tz = "US/Eastern" } = req.body;
       
-      const response = await fetch("https://www.prayoverus.com:3000/getAllBlogArticles", {
+      const response = await fetch("https://shouldcallpaul.replit.app/getAllBlogArticles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Basic ${Buffer.from(`${process.env.VITE_AUTH_USERNAME}:${process.env.VITE_AUTH_PASSWORD}`).toString('base64')}`,
         },
         body: JSON.stringify({ tz }),
       });
@@ -42,10 +44,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Article ID is required" });
       }
 
-      const response = await fetch("https://www.prayoverus.com:3000/getBlogArticle", {
+      const response = await fetch("https://shouldcallpaul.replit.app/getBlogArticle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Basic ${Buffer.from(`${process.env.VITE_AUTH_USERNAME}:${process.env.VITE_AUTH_PASSWORD}`).toString('base64')}`,
         },
         body: JSON.stringify({ tz, id }),
       });

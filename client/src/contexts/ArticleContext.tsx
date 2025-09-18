@@ -30,16 +30,15 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Fetch articles from external API (shared for both public and admin views)
+  // Fetch articles from external API via backend (shared for both public and admin views)
   const { data: articlesData, isLoading: isLoadingArticles } = useQuery({
     queryKey: ["external/articles"],
     queryFn: async () => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "US/Eastern";
-      const response = await fetch("https://shouldcallpaul.replit.app/getAllBlogArticles", {
+      const response = await fetch("/api/external/articles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Basic ${btoa(`${import.meta.env.VITE_AUTH_USERNAME}:${import.meta.env.VITE_AUTH_PASSWORD}`)}`,
         },
         body: JSON.stringify({ tz: timezone }),
       });
