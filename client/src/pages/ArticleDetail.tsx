@@ -2,6 +2,7 @@ import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Heart, MessageCircle, Share } from "lucide-react";
@@ -217,6 +218,7 @@ export default function ArticleDetail() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

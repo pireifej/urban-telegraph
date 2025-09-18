@@ -2,6 +2,7 @@ import { useParams } from "wouter";
 import { useArticles } from "@/contexts/ArticleContext";
 import { Link } from "wouter";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ExternalLink } from "lucide-react";
@@ -133,6 +134,7 @@ export default function ExternalArticleDetail() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }
