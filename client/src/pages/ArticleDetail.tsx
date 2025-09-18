@@ -2,7 +2,7 @@ import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import FullWidthFooter from "@/components/FullWidthFooter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Heart, MessageCircle, Share } from "lucide-react";
@@ -148,8 +148,6 @@ export default function ArticleDetail() {
           <div className="flex items-center text-muted-foreground text-sm">
             <span data-testid="text-published-date">{publishedDate}</span>
             <span className="mx-2">•</span>
-            <span data-testid="text-read-time">{readTime}</span>
-            <span className="mx-2">•</span>
             <span data-testid="text-author">By {article.author || "Urban-Telegraph Team"}</span>
           </div>
         </div>
@@ -218,7 +216,7 @@ export default function ArticleDetail() {
           </div>
         </div>
       </div>
-      <Footer />
+      <FullWidthFooter />
     </div>
   );
 }

@@ -99,9 +99,6 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               Read More <ArrowRight className="ml-1 h-4 w-4" />
             </button>
           </Link>
-          <span className="text-muted-foreground text-sm" data-testid="text-read-time">
-            {readTime}
-          </span>
         </div>
       </div>
     </article>

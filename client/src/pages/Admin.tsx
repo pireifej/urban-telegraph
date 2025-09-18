@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useArticles } from "@/contexts/ArticleContext";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
+import FullWidthFooter from "@/components/FullWidthFooter";
 import ArticleEditor from "@/components/ArticleEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -359,7 +359,7 @@ export default function Admin() {
         onClose={() => setIsEditorOpen(false)}
         article={editingArticle}
       />
-      <Footer />
+      <FullWidthFooter />
     </div>
   );
 }
