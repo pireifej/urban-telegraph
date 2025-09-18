@@ -23,8 +23,15 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     ? formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })
     : formatDistanceToNow(new Date(article.createdAt || Date.now()), { addSuffix: true });
 
-  // Function to get fallback image based on article content
-  const getFallbackImage = () => {
+  // Function to get image URL, either from external API or fallback
+  const getImageUrl = () => {
+    // Check if article has an image filename from the external API
+    const imageFilename = (article as any).image;
+    if (imageFilename) {
+      return `https://shouldcallpaul.replit.app/img/${imageFilename}`;
+    }
+    
+    // Fallback to local images based on article content
     const title = article.title.toLowerCase();
     if (title.includes('theatre') || title.includes('theater') || title.includes('shakespeare') || title.includes('stage') || title.includes('roars')) {
       return theaterImage;
@@ -52,7 +59,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     <article className="article-card bg-card rounded-lg shadow-lg overflow-hidden border border-border" data-testid={`card-article-${article.id}`}>
       <div className="relative w-full h-48 overflow-hidden">
         <img 
-          src={getFallbackImage()}
+          src={getImageUrl()}
           alt={article.title}
           className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
           data-testid="img-featured"
