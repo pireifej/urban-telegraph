@@ -6,68 +6,6 @@ import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
 
-  // External API integration - fetch all blog articles
-  app.post("/api/external/articles", async (req, res) => {
-    try {
-      const { tz = "US/Eastern" } = req.body;
-      
-      const response = await fetch("https://shouldcallpaul.replit.app/getAllBlogArticles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Basic ${Buffer.from(`${process.env.VITE_AUTH_USERNAME}:${process.env.VITE_AUTH_PASSWORD}`).toString('base64')}`,
-        },
-        body: JSON.stringify({ tz }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`External API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      res.json(data);
-    } catch (error) {
-      console.error("Error fetching external articles:", error);
-      res.status(500).json({ 
-        message: "Failed to fetch external articles",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
-  // Individual external article endpoint
-  app.post("/api/external/article", async (req, res) => {
-    try {
-      const { tz = "US/Eastern", id } = req.body;
-      
-      if (!id) {
-        return res.status(400).json({ error: "Article ID is required" });
-      }
-
-      const response = await fetch("https://shouldcallpaul.replit.app/getBlogArticle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Basic ${Buffer.from(`${process.env.VITE_AUTH_USERNAME}:${process.env.VITE_AUTH_PASSWORD}`).toString('base64')}`,
-        },
-        body: JSON.stringify({ tz, id }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`External API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      res.json(data);
-    } catch (error) {
-      console.error("Error fetching external article:", error);
-      res.status(500).json({ 
-        message: "Failed to fetch external article",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
   // Get all articles (admin)
   app.get("/api/articles", async (req, res) => {
     try {
