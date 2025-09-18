@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 
 // Import banner image
-import urbanBanner from "@assets/generated_images/Urban_cityscape_evening_6981b5d6.png";
+import urbanBanner from "@assets/wheel_1758237128421.jpg";
 
 export default function Home() {
   const { articles, isLoadingArticles } = useArticles();
