@@ -52,7 +52,7 @@ export default function FullWidthFooter() {
               href="https://www.shouldcallpaul.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-primary-foreground transition-colors"
+              className="text-blue-400 hover:text-blue-300 transition-colors underline"
             >
               Website designed by Developer and Public Speaker, Paul Ireifej
             </a>

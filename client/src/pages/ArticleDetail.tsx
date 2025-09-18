@@ -106,8 +106,15 @@ export default function ArticleDetail() {
     ? getTimeSincePublication(article.date)
     : "Recently published";
 
-  // Function to get fallback image based on article content
-  const getFallbackImage = () => {
+  // Function to get image URL, same logic as ArticleCard
+  const getImageUrl = () => {
+    // Check if article has an image filename from the external API
+    const imageFilename = (article as any).image;
+    if (imageFilename) {
+      return `https://shouldcallpaul.replit.app/${imageFilename}`;
+    }
+    
+    // Fallback to local images based on article content
     const title = article.title.toLowerCase();
     if (title.includes('theatre') || title.includes('theater') || title.includes('shakespeare') || title.includes('stage') || title.includes('roars')) {
       return theaterImage;
@@ -176,7 +183,7 @@ export default function ArticleDetail() {
         {/* Featured Image */}
         <div className="relative w-full h-96 rounded-lg overflow-hidden mb-8">
           <img 
-            src={getFallbackImage()}
+            src={getImageUrl()}
             alt={article.title}
             className="w-full h-96 object-cover rounded-lg"
             data-testid="img-featured"
