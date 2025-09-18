@@ -28,7 +28,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     // Check if article has an image filename from the external API
     const imageFilename = (article as any).image;
     if (imageFilename) {
-      return `https://shouldcallpaul.replit.app/img/${imageFilename}`;
+      return `https://shouldcallpaul.replit.app${imageFilename}`;
     }
     
     // Fallback to local images based on article content
