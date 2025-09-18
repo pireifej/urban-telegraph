@@ -6,7 +6,7 @@ import FullWidthFooter from "@/components/FullWidthFooter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Heart, MessageCircle, Share } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { differenceInYears, differenceInMonths, differenceInDays } from "date-fns";
 import { Article } from "@shared/schema";
 
 // Import fallback images
@@ -81,8 +81,29 @@ export default function ArticleDetail() {
   }
 
   const readTime = article.readTime || "5 min read";
-  const publishedDate = article.timestamp 
-    ? formatDistanceToNow(new Date(article.timestamp), { addSuffix: true })
+  // Function to get precise time since publication
+  const getTimeSincePublication = (timestamp: string) => {
+    const now = new Date();
+    const pubDate = new Date(timestamp);
+    
+    const years = differenceInYears(now, pubDate);
+    const months = differenceInMonths(now, pubDate);
+    const days = differenceInDays(now, pubDate);
+    
+    if (years > 0) {
+      return `${years} year${years > 1 ? 's' : ''} ago`;
+    } else if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''} ago`;
+    } else if (days > 0) {
+      return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else {
+      return 'Today';
+    }
+  };
+
+  // Use the correct field name: getBlogArticle returns 'date' field, not 'timestamp'
+  const publishedDate = article.date 
+    ? getTimeSincePublication(article.date)
     : "Recently published";
 
   // Function to get fallback image based on article content

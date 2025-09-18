@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { differenceInYears, differenceInMonths, differenceInDays } from "date-fns";
 import { Article } from "@shared/schema";
 
 // Import fallback images
@@ -17,11 +17,33 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ article }: ArticleCardProps) {
   const readTime = article.readTime || "5 min read";
+  // Function to get precise time since publication
+  const getTimeSincePublication = (timestamp: string) => {
+    const now = new Date();
+    const pubDate = new Date(timestamp);
+    
+    const years = differenceInYears(now, pubDate);
+    const months = differenceInMonths(now, pubDate);
+    const days = differenceInDays(now, pubDate);
+    
+    if (years > 0) {
+      return `${years} year${years > 1 ? 's' : ''}`;
+    } else if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''}`;
+    } else if (days > 0) {
+      return `${days} day${days > 1 ? 's' : ''}`;
+    } else {
+      return 'Today';
+    }
+  };
+
   const publishedDate = (article as any).timestamp 
-    ? formatDistanceToNow(new Date((article as any).timestamp), { addSuffix: true })
+    ? getTimeSincePublication((article as any).timestamp)
     : article.publishedAt 
-    ? formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })
-    : formatDistanceToNow(new Date(article.createdAt || Date.now()), { addSuffix: true });
+    ? getTimeSincePublication(article.publishedAt)
+    : article.createdAt 
+    ? getTimeSincePublication(article.createdAt)
+    : 'Recently';
 
   // Function to get image URL, either from external API or fallback
   const getImageUrl = () => {

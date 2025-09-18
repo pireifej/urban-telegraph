@@ -6,7 +6,7 @@ import FullWidthFooter from "@/components/FullWidthFooter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ExternalLink } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { differenceInYears, differenceInMonths, differenceInDays } from "date-fns";
 
 export default function ExternalArticleDetail() {
   const { id } = useParams();
@@ -36,7 +36,27 @@ export default function ExternalArticleDetail() {
     );
   }
 
-  const publishedDate = formatDistanceToNow(new Date(article.timestamp), { addSuffix: true });
+  // Function to get precise time since publication
+  const getTimeSincePublication = (timestamp: string) => {
+    const now = new Date();
+    const pubDate = new Date(timestamp);
+    
+    const years = differenceInYears(now, pubDate);
+    const months = differenceInMonths(now, pubDate);
+    const days = differenceInDays(now, pubDate);
+    
+    if (years > 0) {
+      return `${years} year${years > 1 ? 's' : ''} ago`;
+    } else if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''} ago`;
+    } else if (days > 0) {
+      return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else {
+      return 'Today';
+    }
+  };
+
+  const publishedDate = getTimeSincePublication(article.timestamp);
 
   return (
     <div className="min-h-screen bg-background">
