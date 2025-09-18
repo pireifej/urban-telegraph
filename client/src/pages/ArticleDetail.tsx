@@ -1,6 +1,7 @@
 import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import FullWidthFooter from "@/components/FullWidthFooter";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,11 @@ import abstractImage from "@assets/generated_images/Creative_arts_abstract_00e94
 
 export default function ArticleDetail() {
   const { id } = useParams();
+
+  // Set page title
+  useEffect(() => {
+    document.title = "Urban Telegraph";
+  }, []);
 
   const { data: articleData, isLoading, error } = useQuery({
     queryKey: ["external/article", id],

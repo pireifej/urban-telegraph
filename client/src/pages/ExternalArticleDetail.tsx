@@ -1,5 +1,6 @@
 import { useParams } from "wouter";
 import { useArticles } from "@/contexts/ArticleContext";
+import { useEffect } from "react";
 import { Link } from "wouter";
 import Navigation from "@/components/Navigation";
 import FullWidthFooter from "@/components/FullWidthFooter";
@@ -11,6 +12,11 @@ import { differenceInYears, differenceInMonths, differenceInDays } from "date-fn
 export default function ExternalArticleDetail() {
   const { id } = useParams();
   const { externalArticles } = useArticles();
+
+  // Set page title
+  useEffect(() => {
+    document.title = "Urban Telegraph";
+  }, []);
 
   const article = externalArticles.find(a => a.id === parseInt(id || "0"));
 
