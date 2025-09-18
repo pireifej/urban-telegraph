@@ -34,23 +34,30 @@ export function ArticleProvider({ children }: { children: ReactNode }) {
   const { data: articlesData, isLoading: isLoadingArticles } = useQuery({
     queryKey: ["external/articles"],
     queryFn: async () => {
-      const response = await fetch("https://shouldcallpaul.replit.app/getAllBlogArticles", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Basic ${btoa(`${import.meta.env.VITE_AUTH_USERNAME}:${import.meta.env.VITE_AUTH_PASSWORD}`)}`,
-        },
-        body: JSON.stringify({ tz: "US/Eastern" }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      try {
+        const response = await fetch("https://shouldcallpaul.replit.app/getAllBlogArticles", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Basic ${btoa(`${import.meta.env.VITE_AUTH_USERNAME}:${import.meta.env.VITE_AUTH_PASSWORD}`)}`,
+          },
+          body: JSON.stringify({ tz: "US/Eastern" }),
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        // API returns direct array, not wrapped in result
+        return data;
+      } catch (fetchError) {
+        console.error('Failed to fetch articles:', fetchError);
+        throw fetchError;
       }
-      
-      const data = await response.json();
-      // API returns direct array, not wrapped in result
-      return data;
     },
+    retry: 3,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   // Use same data for both public and admin views

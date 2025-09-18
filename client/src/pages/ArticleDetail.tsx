@@ -23,18 +23,36 @@ export default function ArticleDetail() {
     queryKey: ["external/article", id],
     queryFn: async () => {
       if (!id) return null;
-      const response = await fetch("https://shouldcallpaul.replit.app/getBlogArticle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Basic ${btoa(`${import.meta.env.VITE_AUTH_USERNAME}:${import.meta.env.VITE_AUTH_PASSWORD}`)}`,
-        },
-        body: JSON.stringify({ tz: "US/Eastern", id: parseInt(id) }),
-      });
-      const data = await response.json();
-      return data;
+      
+      try {
+        const response = await fetch("https://shouldcallpaul.replit.app/getBlogArticle", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Basic ${btoa(`${import.meta.env.VITE_AUTH_USERNAME}:${import.meta.env.VITE_AUTH_PASSWORD}`)}`,
+          },
+          body: JSON.stringify({ tz: "US/Eastern", id: parseInt(id) }),
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.error !== 0) {
+          throw new Error(`API error: ${data.error}`);
+        }
+        
+        return data;
+      } catch (fetchError) {
+        console.error('Failed to fetch article:', fetchError);
+        throw fetchError;
+      }
     },
     enabled: !!id,
+    retry: 3,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   const article = articleData?.result;
