@@ -210,6 +210,7 @@ export default function ArticleDetail() {
             src={getImageUrl()}
             alt={article.title}
             className="w-full h-96 object-cover rounded-lg"
+            style={{ objectPosition: 'top' }}
             data-testid="img-featured"
           />
           <div className="absolute inset-0 bg-black/30 rounded-lg"></div>
