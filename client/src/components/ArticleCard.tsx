@@ -83,7 +83,8 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         <img 
           src={getImageUrl()}
           alt={article.title}
-          className="w-full h-48 object-contain transition-transform duration-300 hover:scale-105"
+          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+          style={{ objectPosition: 'center 30%' }}
           data-testid="img-featured"
         />
         <div className="absolute inset-0 bg-black/20"></div>
